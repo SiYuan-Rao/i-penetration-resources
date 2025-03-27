@@ -1,0 +1,5 @@
+/account/register
+/role/list
+/user/list
+/org/list
+/user/getUserInfo
