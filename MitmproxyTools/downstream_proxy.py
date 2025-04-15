@@ -5,15 +5,16 @@ from des_tool import des_decrypt
 from des_tool import des_encrypt
 from http_extractor_tool import get_request_host_header
 from filter import filter_request
+from shared_config import config
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
 def request(flow: mitmproxy.http.HTTPFlow) -> None:
     host_header = get_request_host_header(flow)
-    if host_header != "":
+    if host_header != config["host_header"]:
         return
 
-    if not filter_request(flow, ""):
+    if not filter_request(flow, config["base_url"]):
         return
     
     body_message = flow.request.get_text()
@@ -25,10 +26,10 @@ def request(flow: mitmproxy.http.HTTPFlow) -> None:
 
 def response(flow: mitmproxy.http.HTTPFlow) -> None:
     host_header = get_request_host_header(flow)
-    if host_header != "":
+    if host_header != config["host_header"]:
         return
     
-    if not filter_request(flow, ""):
+    if not filter_request(flow, config["base_url"]):
         return
     
     logging.info(f"下游代理获取到Response明文: {flow.response.get_text()}")
